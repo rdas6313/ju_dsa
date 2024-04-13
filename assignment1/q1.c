@@ -49,6 +49,21 @@ void display(){
 	printf("\n");
 }
 
+int insert_element(int val){
+	if(current_index == size){
+		head = realloc(head,(size+ARRAY_SIZE)*sizeof(int));
+		if(head == NULL){
+			printf("Unable to insert value. Insufficient memory.\n");
+			return 0;
+		}
+		size += ARRAY_SIZE;
+	}
+
+	*(head+current_index) = val;
+	current_index++;
+	return 1;
+}
+
 void insert(){
 	if(head == NULL){
 		printf("Array has not been created yet.\n");
@@ -58,17 +73,8 @@ void insert(){
 	printf("value: ");
 	scanf("%d",&val);
 
-	if(current_index == size){
-		head = realloc(head,(size+ARRAY_SIZE)*sizeof(int));
-		if(head == NULL){
-			printf("Unable to insert value. Insufficient memory.\n");
-			return;
-		}
-		size += ARRAY_SIZE;
-	}
-
-	*(head+current_index) = val;
-	current_index++;
+	if(!insert_element(val))
+		return;
 	printf("inserted.\n");
 
 }
@@ -170,6 +176,75 @@ void element_at(){
 	printf("Value at index %d : %d\n",index,*(head+index));
 }
 
+void merge(){
+	if(head == NULL){
+		printf("Array has not been created yet.\n");
+		return;
+	}
+	int n;
+	printf("No of Merge Elements: ");
+	scanf("%d",&n);
+	int element, flag = 0;
+	printf("\nElements: ");
+	for(int i=0;i<n;i++){
+		scanf("%d",&element);
+		if(!insert_element(element)){
+			flag = 1;
+			break;
+		}
+	}
+
+	if(!flag)
+		printf("Merged Successfully!\n");
+	
+
+}
+
+
+void split(){
+	if(head == NULL){
+		printf("Array has not been created yet.\n");
+		return;
+	}
+
+	printf("Index from where you want to split: ");
+	int index;
+	scanf("%d",&index);
+	if(index > current_index){
+		printf("Index out of bound!\n");
+		return;
+	}
+	printf("Element of Array 1: ");
+	for(int i=0;i<index;i++)
+		printf("%d ",head[i]);
+	printf("\nElement of Array 2: ");
+	for(int i=index;i<current_index;i++)
+		printf("%d ",head[i]);
+	printf("\n");
+}
+
+void sort(){
+	if(head == NULL){
+		printf("Array has not been created yet.\n");
+		return;
+	}
+	if(current_index <= 1){
+		printf("No need to sort! Either no of element is one or less than that.\n");
+		return;
+	}
+	int i,j;
+	for(i=0;i<current_index-1;i++){
+		for(j=i+1;j<current_index;j++){
+			if(head[i] > head[j]){
+				int tmp = head[i];
+				head[i] = head[j];
+				head[j] = tmp;
+			}
+		}
+	}
+	printf("Sorted!\n");
+}
+
 int main(){
 	int should_exit = 0;
 	while(!should_exit){
@@ -230,15 +305,26 @@ int main(){
 				printf(".........\n");
 				break;
 			case 9:
+				printf(".........\n");
+				merge();
+				printf(".........\n");
 				break;
 			case 10:
+				printf(".........\n");
+				split();
+				printf(".........\n");
 				break;
 			case 11:
+				printf(".........\n");
+				sort();
+				printf(".........\n");
 				break;
 			default:
 				free_mem();
 				should_exit = 1;
 		}
+	
+
 	}
 	return 0;
 }
